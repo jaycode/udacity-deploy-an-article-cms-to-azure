@@ -36,7 +36,7 @@ Edit `credentials.sh` with credentials as you go through the items below.
 - Advanced - Access tier: Cool
 - Network access: Enable public access from all networks (the default)
 - On the "Networking" page, click on "Add your client IP address" link
-- Create container named "images"
+- Create container named "images". Set its access level to Container.
 - Blob Storage key: 8vNfUqGqnND0GI1Yujdd17gwURdEyBwVsFfKuiwZJdByu8DEWhHc2R1RYcQFxxUX2vqx72OXiz2
 - Blob connection string: DefaultEndpointsProtocol=https;AccountName=images11;AccountKey=8vNfUqGqnND0GI1Yujdd17gwURdEyBwVsFfKuiwZJdByu8DEWhHc2R1RYcQFxxUX2vqx72OXiz2/+AStSydbYA==;EndpointSuffix=core.windows.net
 
