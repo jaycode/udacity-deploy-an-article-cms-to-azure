@@ -9,60 +9,131 @@ This project is a Python web application built using Flask. The user can log in 
 
 Or, once the MS Login button is implemented, it will automatically log into the `admin` account.
 
-## Project Instructions (For Student)
+## Quick Tutorial with sample values
 
-You are expected to do the following to complete this project:
-1. Create a Resource Group in Azure.
-2. Create an SQL Database in Azure that contains a user table, an article table, and data in each table (populated with the scripts provided in the SQL Scripts folder).
-    - Provide a screenshot of the populated tables as detailed further below.
-3. Create a Storage Container in Azure for `images` to be stored in a container.
-    - Provide a screenshot of the storage endpoint URL as detailed further below.
-4. Add functionality to the Sign In With Microsoft button. 
-    - This will require completing TODOs in `views.py` with the `msal` library, along with appropriate registration in Azure Active Directory.
-5. Choose to use either a VM or App Service to deploy the FlaskWebProject to Azure. Complete the analysis template in `WRITEUP.md` (or include in the README) to compare the two options, as well as detail your reasoning behind choosing one or the other. Once you have made your choice, go through with deployment.
-6. Add logging for whether users successfully or unsuccessfully logged in.
-    - This will require completing TODOs in `__init__.py`, as well as adding logging where desired in `views.py`.
-7. To prove that the application in on Azure and working, go to the URL of your deployed app, log in using the credentials in this README, click the Create button, and create an article with the following data:
-	- Title: "Hello World!"
-	- Author: "Jane Doe"
-	- Body: "My name is Jane Doe and this is my first article!"
-	- Upload an image of your choice. Must be either a .png or .jpg.
-   After saving, click back on the article you created and provide a screenshot proving that it was created successfully. Please also make sure the URL is present in the screenshot.
-8. Log into the Azure Portal, go to your Resource Group, and provide a screenshot including all of the resources that were created to complete this project. (see sample screenshot in "example_images" folder)
-9. Take a screenshot of the Redirect URIs entered for your registered app, related to the MS Login button.
-10. Take a screenshot of your logs (can be from the Log stream in Azure) showing logging from an attempt to sign in with an invalid login, as well as a valid login.
+Edit `credentials.sh` with credentials as you go through the items below.
 
-## example_images Folder
+## Resource Group
+- Resource Group Name: cms
 
-This folder contains sample screenshots that students are required to submit in order to prove they completed various tasks throughout the project.
+## SQL Database
+- DB name: cms
+- Server: cms.database.windows.net
+- DB region: us-east
+- Admin login: cmsadmin
+- Admin password: CMS4dmin
+- Resource group: cms
+- DB workload env: Development
+- DB compute + storage: DTU - Basic
+- Press the "Next: Networking" button, then select "Public Endpoint", and set both of the Firewall rules that appear to "Yes".
+- Set everything else to default
+- **Run SQL queries in sql_scripts/ directory after completion, starting from the users table. Don't forget to take screenshots.**
 
-1. article-cms-solution.png is a screenshot from running the FlaskWebProject on Azure and prove that the student was able to create a new entry. The Title, Author, and Body fields must be populated to prove that the data is being retrieved from the Azure SQL Database while the image on the right proves that an image was uploaded and pulled from Azure Blob Storage.
-2. azure-portal-resource-group.png is a screenshot from the Azure Portal showing all of the contents of the Resource Group the student needs to create. The resource group must (at least) contain the following:
-	- Storage Account
-	- SQL Server
-	- SQL Database
-	- Resources related to deploying the app
-3. sql-storage-solution.png is a screenshot showing the created tables and one query of data from the initial scripts.
-4. blob-solution.png is a screenshot showing an example of blob endpoints for where images are sent for storage.
-5. uri-redirects-solution.png is a screenshot of the redirect URIs related to Microsoft authentication.
-6. log-solution.png is a screenshot showing one potential form of logging with an "Invalid login attempt" and "admin logged in successfully", taken from the app's Log stream. You can customize your log messages as you see fit for these situations.
+## Storage Account
+- Resource group: cms
+- Storage account name: images11 (needs to be unique)
+- Advanced - Allow enabling anonymous access on individual containers: Enable
+- Advanced - Access tier: Cool
+- Network access: Enable public access from all networks (the default)
+- On the "Networking" page, click on "Add your client IP address" link
+- Create container named "images"
+- Blob Storage key: 8vNfUqGqnND0GI1Yujdd17gwURdEyBwVsFfKuiwZJdByu8DEWhHc2R1RYcQFxxUX2vqx72OXiz2
+- Blob connection string: DefaultEndpointsProtocol=https;AccountName=images11;AccountKey=8vNfUqGqnND0GI1Yujdd17gwURdEyBwVsFfKuiwZJdByu8DEWhHc2R1RYcQFxxUX2vqx72OXiz2/+AStSydbYA==;EndpointSuffix=core.windows.net
 
-## Dependencies
+## Microsoft Entra ID
+### App Registration
+- Name: cmsEntraID
+- Who can use? "Accounts in any organizational directory (Any Microsoft Entra ID tenant - Multitenant) and personal Microsoft accounts (e.g. Skype, Xbox)"
 
-1. A free Azure account
-2. A GitHub account
-3. Python 3.10
-4. Visual Studio 2019 Community Edition (Free)
-5. The latest Azure CLI (helpful; not required - all actions can be done in the portal)
+### Secret Creation
+- Secret description: cmsSecret
+- Secret Key: 3a51cadc-dc5f-4503-959d-d4286f24d7a4
+- Client Secret: wN48Q~SVo5ecjrNs-Fac1wvs9cRVgXVYPxEmjc.r
+- Application (client) ID: 1660e7a3-74ae-4945-aea0-5bd962871c33
 
-All Python dependencies are stored in the requirements.txt file. To install them, using Visual Studio 2019 Community Edition:
-1. In the Solution Explorer, expand "Python Environments"
-2. Right-click on "Python 3.10 (64-bit) (global default)" and select "Install from requirements.txt"
-
-## Troubleshooting
-
-- Mac users may need to install `unixodbc` as well as related drivers as shown below:
+## OPTION 1: Virtual Machine
+- Name: vm-cms
+- Authentication type: Password
+- Username: cmsUser
+- Password: cmsP4ssw0rd111
+- Size: Standard B1ls (the cheapest)
+- Select inbound ports: Choose 80, 443, and 22
+  1. Connect to VM via SSH
+  2. Setup GitHub SSH key
+    - `ssh-keygen -t ed25519 -C "yourgithubemail@example.com"`
+    - Press enter on the next few prompts
+    - `eval "$(ssh-agent -s)"`
+    - `ssh-add ~/.ssh/id_ed25519`
+    - `cat ~/.ssh/id_ed25519.pub`
+    - Copy the output to https://github.com/settings/keys
+  3. Setup the website:
+    - Setup HTTPS:
+      - `sudo mkdir -p /etc/nginx/ssl`
+      - `sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/nginx/ssl/nginx.key -out /etc/nginx/ssl/nginx.crt`
+      - Any values are accepted for the next questions. Here is an example:
+        Country Name (2 letter code) [AU]:US
+        State or Province Name (full name) [Some-State]:California
+        Locality Name (eg, city) []:Palo Alto
+        Organization Name (eg, company) [Internet Widgits Pty Ltd]:
+        Organizational Unit Name (eg, section) []:
+        Common Name (e.g. server FQDN or YOUR name) []:
+        Email Address []:hello@example.com
+    - `sudo curl https://packages.microsoft.com/config/ubuntu/22.04/prod.list | sudo tee /etc/apt/sources.list.d/mssql-release.list`
+    - `sudo apt update`
+    - `git clone yourgithubrepo web`
+    - `sudo apt -y update && sudo apt-get -y install nginx python3-venv unixodbc unixodbc-dev`
+    - `sudo ACCEPT_EULA=Y apt-get install -y msodbcsql17`
+    - `sudo unlink /etc/nginx/sites-enabled/default`
+    - `sudo vim /etc/nginx/sites-available/reverse-proxy.conf`
+    - Paste this code into reverse-proxy.conf:
     ```bash
-    brew install unixodbc
+    server {
+    listen 80;
+    location / {
+    proxy_pass https://localhost:5555;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection keep-alive;
+    proxy_set_header Host $host;
+    proxy_cache_bypass $http_upgrade;
+    }
+    }
+    server {
+    listen 443 ssl;
+    ssl_certificate /etc/nginx/ssl/nginx.crt;
+    ssl_certificate_key /etc/nginx/ssl/nginx.key;
+    location / {
+    proxy_pass https://localhost:5555;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection keep-alive;
+    proxy_set_header Host $host;
+    proxy_cache_bypass $http_upgrade;
+    }
+    }
     ```
-- Check [here](https://docs.microsoft.com/en-us/sql/connect/odbc/linux-mac/install-microsoft-odbc-driver-sql-server-macos?view=sql-server-ver15) to add SQL Server drivers for Mac.
+
+    - `sudo ln -s /etc/nginx/sites-available/reverse-proxy.conf /etc/nginx/sites-enabled/reverse-proxy.conf`
+    - `sudo service nginx restart`
+    - `cd ~/web`
+    - `python3 -m venv venv`
+    - `. venv/bin/activate`
+    - `pip install --upgrade pip`
+    - `pip install -r requirements.txt`
+    - Copy-paste the code from `credentials.sh` to the terminal
+    - `python application.py`
+
+
+## OPTION 2: Web App - TODO
+- Name: cms-d3etfkhudcfka0gm.eastus-01.azurewebsites.net
+- Runtime stack: Python 3.10
+- Pricing Plan: Free F1
+- Deployment - Basic authentication: Enable
+- TODO
+
+## Microsoft Entra ID again
+Go to App Registrations, click on the App Registration created earlier, then pick Authentication from the left sidebar.
+
+### Authentication - Add a Platform - Web
+- Redirect URIs: https://[IP ADDRESS FROM VM]/getAToken
+- logout URL: https://[IP ADDRESS FROM VM]/login

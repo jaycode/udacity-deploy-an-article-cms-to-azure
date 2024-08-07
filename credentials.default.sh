@@ -1,8 +1,8 @@
-# 1. Update with actual credentials
+# 1. Update with actual credentials and rename to credentials.sh
 # 2. Send the code to your VM via SSH (can be by copy pasting to Azure CLI)
 export BLOB_ACCOUNT="your_blob_account_here"
-export BLOB_STORAGE_KEY="your_blob_storage_key_here"
 export BLOB_CONTAINER="your_blob_container_here"
+export BLOB_STORAGE_KEY="your_blob_storage_key_here"
 export BLOB_CONNECTION_STRING="your_blob_connection_string_here"
 export SQL_SERVER="cms.database.windows.net"
 export SQL_DATABASE="cms"
