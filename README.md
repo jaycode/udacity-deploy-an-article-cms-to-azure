@@ -4,7 +4,29 @@ This project is a Python web application built using Flask. The user can log in 
 
 ## I decided to use VM in this project because...
 
-The template code did not work right away with App Service. I needed quick feedback as I debugged the issue. Moreover, the VM path gave me more control during the development phase.
+The template code did not work right away with App Service. I needed quick feedback as I debugged the issue. Moreover, the VM path gave me more control during the development phase. That said, I also considered these four other factors:
+
+### Cost
+VM will cost more, at least in the beginning. In return, we have more control over the entire aspects of the application. If we ever need to move away from Azure, it would be easier to do so rather than being tied to App Service.
+
+### Scalability
+App Service supports automatic scaling based on demand. This means it can handle varying loads efficiently, scaling out or up with minimal effort. It’s designed to be elastic, making it easier to manage growth or fluctuations in traffic. In contrast, scaling with VMs requires manual configuration or custom scripts. While VMs offer more control, setting up and managing a scalable infrastructure is more complex and time-consuming.
+
+### Availability
+App Service offers built-in high availability features. It distributes traffic across multiple instances and provides load balancing automatically. With robust SLAs, App Service ensures high uptime and reliability. On the other hand, achieving high availability with VMs requires configuring and managing availability sets or zones, load balancers, and failover mechanisms. Although VMs also offer SLAs, the setup for high availability is more manual and complex.
+
+### Workflow
+App Service simplifies deployment with easy integration into CI/CD pipelines, reducing the need for extensive configuration. It includes built-in features like deployment slots, application insights, and monitoring tools, which streamline the development and deployment workflow. VMs provide flexibility, allowing the installation and configuration of any necessary software or tools. However, setting up CI/CD pipelines and deployment processes on VMs is more complex and requires custom configurations.
+
+## Assess app changes that would change your decision.
+
+**How will the app change per your decision, such as the application requirement or more control over the infrastructure?**
+
+Choosing VMs will provide more control over the infrastructure, allowing custom configurations and specific software installations. Opting for App Service will streamline deployments, automatically manage scaling, and reduce operational overhead.
+
+**List any other needs you must change to suit your application requirements.**
+
+If using VMs, I will need to set up and manage high availability, load balancing, and CI/CD pipelines manually. For App Service, I need to ensure compatibility with its built-in features and possibly refactor code for smooth deployment and scaling.
 
 ## Log In Credentials for FlaskWebProject
 
