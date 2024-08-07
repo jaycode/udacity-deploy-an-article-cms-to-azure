@@ -57,6 +57,7 @@ Edit `credentials.sh` with credentials as you go through the items below.
 - Username: cmsUser
 - Password: cmsP4ssw0rd111
 - Size: Standard B1ls (the cheapest)
+- Ubuntu 24.04
 - Select inbound ports: Choose 80, 443, and 22
   1. Connect to VM via SSH
   2. Setup GitHub SSH key
@@ -80,12 +81,12 @@ Edit `credentials.sh` with credentials as you go through the items below.
         Email Address []:hello@example.com
     - `sudo curl https://packages.microsoft.com/config/ubuntu/22.04/prod.list | sudo tee /etc/apt/sources.list.d/mssql-release.list`
     - `sudo apt update`
-    - `git clone yourgithubrepo web`
+    - `git clone [git@github.com:user/repo.git] web`
     - `sudo apt -y update && sudo apt-get -y install nginx python3-venv unixodbc unixodbc-dev`
     - `sudo ACCEPT_EULA=Y apt-get install -y msodbcsql17`
     - `sudo unlink /etc/nginx/sites-enabled/default`
     - `sudo vim /etc/nginx/sites-available/reverse-proxy.conf`
-    - Paste this code into reverse-proxy.conf:
+    - Paste this code into reverse-proxy.conf (don't include the initial and last lines with three backticks):
     ```bash
     server {
     listen 80;

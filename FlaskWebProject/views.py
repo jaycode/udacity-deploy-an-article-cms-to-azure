@@ -73,6 +73,7 @@ def login():
         next_page = request.args.get('next')
         if not next_page or url_parse(next_page).netloc != '':
             next_page = url_for('home')
+            app.logger.warning("Admin logged successfully.")
         return redirect(next_page)
     session["state"] = str(uuid.uuid4())
     auth_url = _build_auth_url(scopes=Config.SCOPE, state=session["state"])
@@ -101,7 +102,7 @@ def authorized():
         user = User.query.filter_by(username="admin").first()
         login_user(user)
         _save_cache(cache)
-        app.logger.info("Admin logged successfully.")
+        app.logger.warning("Admin logged successfully.")
     return redirect(url_for('home'))
 
 @app.route('/logout')
