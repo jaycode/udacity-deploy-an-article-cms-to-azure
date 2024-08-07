@@ -8,6 +8,9 @@ export SQL_SERVER="cms.database.windows.net"
 export SQL_DATABASE="cms"
 export SQL_USER_NAME="cmsadmin"
 export SQL_PASSWORD="CMS4dmin"
-export SECRET_KEY="your_secret_key_here"
+# Secret Value in Azure
 export CLIENT_SECRET="your_client_secret_here"
+# Secret ID in Azure
+export SECRET_KEY="your_secret_key_here"
+# Application (client) ID in Azure
 export CLIENT_ID="your_client_id_here"
