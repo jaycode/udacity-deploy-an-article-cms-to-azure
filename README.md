@@ -37,12 +37,12 @@ Or, once the MS Login button is implemented, it will automatically log into the 
 
 ## Quick Tutorial with sample values
 
-Edit `credentials.sh` with credentials as you go through the items below.
+For VM setup: Edit `credentials.sh` with credentials as you go through the items below.
 
-## Resource Group
+### 1. Resource Group
 - Resource Group Name: cms
 
-## SQL Database
+### 2. SQL Database
 - DB name: cms
 - Server: cms.database.windows.net
 - DB region: us-east
@@ -55,7 +55,7 @@ Edit `credentials.sh` with credentials as you go through the items below.
 - Set everything else to default
 - **Run SQL queries in sql_scripts/ directory after completion, starting from the users table. Don't forget to take screenshots.**
 
-## Storage Account
+### 3. Storage Account
 - Resource group: cms
 - Storage account name: images11 (needs to be unique)
 - Advanced - Allow enabling anonymous access on individual containers: Enable
@@ -66,18 +66,21 @@ Edit `credentials.sh` with credentials as you go through the items below.
   - Blob Storage key: 8vNfUqGqnND0GI1Yujdd17gwURdEyBwVsFfKuiwZJdByu8DEWhHc2R1RYcQFxxUX2vqx72OXiz2
   - Blob connection string: DefaultEndpointsProtocol=https;AccountName=images11;AccountKey=8vNfUqGqnND0GI1Yujdd17gwURdEyBwVsFfKuiwZJdByu8DEWhHc2R1RYcQFxxUX2vqx72OXiz2/+AStSydbYA==;EndpointSuffix=core.windows.net
 
-## Microsoft Entra ID
-### App Registration
+### 4. Microsoft Entra ID
+#### 4.1. App Registration
 - Name: cmsEntraID
 - Who can use? "Accounts in any organizational directory (Any Microsoft Entra ID tenant - Multitenant) and personal Microsoft accounts (e.g. Skype, Xbox)"
 
-### Secret Creation
+#### 4.2. Secret Creation
 - Secret description: cmsSecret
 - Secret Key: 3a51cadc-dc5f-4503-959d-d4286f24d7a4
 - Client Secret: wN48Q~SVo5ecjrNs-Fac1wvs9cRVgXVYPxEmjc.r
 - Application (client) ID: 1660e7a3-74ae-4945-aea0-5bd962871c33
 
-## OPTION 1: Virtual Machine
+### 5. Application
+Pick either of the following two options for setting up your application.
+
+#### 5.1. OPTION 1: Virtual Machine
 - Name: vm-cms
 - Authentication type: Password
 - Username: cmsUser
@@ -150,17 +153,33 @@ Edit `credentials.sh` with credentials as you go through the items below.
     - Copy-paste the code from `credentials.sh` to the terminal
     - `python application.py`
 
-
-## OPTION 2: Web App - TODO
-- Name: cms-d3etfkhudcfka0gm.eastus-01.azurewebsites.net
+#### 5.2. OPTION 2: Web App (easier)
+- Name: udacitycms.azurewebsites.net
 - Runtime stack: Python 3.10
 - Pricing Plan: Free F1
-- Deployment - Basic authentication: Enable
-- TODO
+- If getting "Validation failed for a resource" error, pick a different region.
 
-## Microsoft Entra ID again
+After creation:
+- **Settings** -> **Environment variables** - Add the following variables (sample values are included, replace them with your own values):
+  - BLOB_ACCOUNT: image11
+  - BLOB_CONTAINER: images
+  - BLOB_STORAGE_KEY: N1L3GpGK4J+EAkf2Bwu9QJXhS2JQF3mkK3Y1CUE7ah79tTmtUUDFnMKCBrVHSxGXpyw0J6QS2eEt+AStxkseeA==
+  - BLOB_CONNECTION_STRING: DefaultEndpointsProtocol=https;AccountName=image11;AccountKey=N1L3GpGK4J+EAkf2Bwu9QJXhS2JQF3mkK3Y1CUE7ah79tTmtUUDFnMKCBrVHSxGXpyw0J6QS2eEt+AStxkseeA==;EndpointSuffix=core.windows.net
+  - SQL_SERVER: cms.database.windows.net
+  - SQL_DATABASE: cms
+  - SQL_USER_NAME: cmsadmin
+  - SQL_PASSWORD: CMS4dmin
+  - CLIENT_SECRET: liK8Q~KDwIGaXpH1UaR-RS3W0Bk8-apIqD32ectH
+  - SECRET_KEY: ac2df92a-66cf-4f47-875b-f5d027c33934
+  - CLIENT_ID: 4cec6730-afad-4714-b5bb-9b2c6666eaba
+
+- **Deployment Center**
+  - Source: GitHub
+  - Pick the repo that contains the starter files.
+
+### 6. Microsoft Entra ID again
 Go to App Registrations, click on the App Registration created earlier, then pick Authentication from the left sidebar.
 
-### Authentication - Add a Platform - Web
-- Redirect URIs: https://[IP ADDRESS FROM VM]/getAToken
-- logout URL: https://[IP ADDRESS FROM VM]/login
+#### 6.1. Authentication - Add a Platform - Web
+- Redirect URIs: https://[IP ADDRESS FROM VM or WEB APP ADDRESS]/getAToken
+- logout URL: https://[IP ADDRESS FROM VM or WEB APP ADDRESS]/login
